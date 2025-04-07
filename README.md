@@ -5,7 +5,7 @@
 ## Project Description
 This project is a **Ray Tracing** (Ray Casting) system developed as a web application using **HTML**, **CSS** and **JavaScript**. Users can modify various settings to render 3D scenes and view real-time ray tracing results. The system supports reflective surfaces, light sources, and color adjustments.
 
-> [!INFO]
+> [!NOTE]
 > This is just a simple simulation!!!!!!!!!!!!!!!
 
 ## Features
