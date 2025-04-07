@@ -1,6 +1,6 @@
 # Ray Tracing System with JavaScript
 
-![raytracing](https://github.com/user-attachments/assets/bc28768f-8a18-4cb4-b077-1f3ce043de1c)
+![raytracing](https://github.com/user-attachments/assets/971b9966-a5d6-48b0-be42-1b84e968f040)
 
 ## Project Description
 This project is a **Ray Tracing** (Ray Casting) system developed as a web application using **HTML**, **CSS** and **JavaScript**. Users can modify various settings to render 3D scenes and view real-time ray tracing results. The system supports reflective surfaces, light sources, and color adjustments.
