@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ray Tracing System with JavaScript</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212; 
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff; 
+    }
+
+    h1 {
+      color: #fff;
+      margin-bottom: 20px;
+      animation: glow 1.5s ease-in-out infinite alternate;
+      text-shadow: 0 0 10px #fff, 0 0 20px #ff007d, 0 0 30px #ff007d, 0 0 40px #ff007d;
+    }
+
+    @keyframes glow {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #ff007d, 0 0 15px #ff007d, 0 0 20px #ff007d;
+      }
+      100% {
+        text-shadow: 0 0 20px #fff, 0 0 30px #ff007d, 0 0 40px #ff007d, 0 0 50px #ff007d;
+      }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #1f1f1f;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+      padding: 20px;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    canvas {
+      border: 1px solid #333; 
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-style: italic;
+      color: #bbb; 
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #ddd;
+    }
+
+    select, input {
+      padding: 5px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #333; 
+      color: #fff; 
+    }
+
+    .signature {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+
+    .light-controls {
+      border: 1px solid #444;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    .light-control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .light-slider {
+      width: 100%;
+    }
+  </style>
+  <script src="index.js"></script>
+</head>
+<body>
+  <h1>Ray Tracing System</h1>
+  
+  <div class="container">
+    <div class="controls">
+      <div class="control-group">
+        <label for="resolution">Resolution:</label>
+        <select id="resolution">
+          <option value="100">Very Low (100x75)</option>
+          <option value="200">Low (200x150)</option>
+          <option value="400" selected>Medium (400x300)</option>
+          <option value="600">High (600x450)</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="sphereColor">Sphere Color:</label>
+        <select id="sphereColor">
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue" selected>Blue</option>
+          <option value="yellow">Yellow</option>
+          <option value="purple">Purple</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="reflective">Reflective:</label>
+        <input type="checkbox" id="reflective" checked>
+      </div>
+    </div>
+
+    <div class="light-controls">
+      <div class="light-control-header">
+        <label>Light 1</label>
+        <input type="color" id="light1Color" value="#ffffff">
+      </div>
+      <div class="control-group">
+        <label for="light1X">Direction X: <span id="light1XValue">5</span></label>
+        <input type="range" id="light1X" class="light-slider" min="-10" max="10" value="5" step="0.5">
+      </div>
+      <div class="control-group">
+        <label for="light1Y">Direction Y: <span id="light1YValue">5</span></label>
+        <input type="range" id="light1Y" class="light-slider" min="-10" max="10" value="5" step="0.5">
+      </div>
+      <div class="control-group">
+        <label for="light1Z">Direction Z: <span id="light1ZValue">0</span></label>
+        <input type="range" id="light1Z" class="light-slider" min="-10" max="10" value="0" step="0.5">
+      </div>
+      <div class="control-group">
+        <label for="light1Intensity">Intensity: <span id="light1IntensityValue">0.8</span></label>
+        <input type="range" id="light1Intensity" class="light-slider" min="0" max="1" value="0.8" step="0.1">
+      </div>
+    </div>
+
+    <div class="light-controls">
+      <div class="light-control-header">
+        <label>Light 2</label>
+        <input type="color" id="light2Color" value="#ccccff">
+      </div>
+      <div class="control-group">
+        <label for="light2X">Direction X: <span id="light2XValue">-5</span></label>
+        <input type="range" id="light2X" class="light-slider" min="-10" max="10" value="-5" step="0.5">
+      </div>
+      <div class="control-group">
+        <label for="light2Y">Direction Y: <span id="light2YValue">5</span></label>
+        <input type="range" id="light2Y" class="light-slider" min="-10" max="10" value="5" step="0.5">
+      </div>
+      <div class="control-group">
+        <label for="light2Z">Direction Z: <span id="light2ZValue">0</span></label>
+        <input type="range" id="light2Z" class="light-slider" min="-10" max="10" value="0" step="0.5">
+      </div>
+      <div class="control-group">
+        <label for="light2Intensity">Intensity: <span id="light2IntensityValue">0.4</span></label>
+        <input type="range" id="light2Intensity" class="light-slider" min="0" max="1" value="0.4" step="0.1">
+      </div>
+    </div>
+    
+    <button id="render">Start Render</button>
+    <div class="status" id="status">Ready</div>
+    <canvas id="canvas" width="400" height="300"></canvas>
+    
+    <div class="signature">
+      Created by <span style="animation: glow 10s ease-in-out infinite alternate;">azad1337</span> - April 2025
+    </div>
+  </div>
+</body>
+</html>
